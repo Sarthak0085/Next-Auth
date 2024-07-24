@@ -6,7 +6,7 @@ interface EmailOptions {
     email: string,
     subject: string,
     template?: string,
-    token?: string,
+    html?: string,
     data?: { [key: string]: any }
 }
 
@@ -21,7 +21,7 @@ const sendEmail = async (options: EmailOptions): Promise<void> => {
         }
     });
 
-    const { email, subject, template, data, token } = options;
+    const { email, subject, template, data, html } = options;
 
     if (template && data) {
         //get the path of email template file
@@ -38,12 +38,11 @@ const sendEmail = async (options: EmailOptions): Promise<void> => {
         }
         await transporter.sendMail(mailOptions);
     } else {
-        const confirmLink = `http://localhost:3000/auth/verification?token=${token}`;
         const mailOptions = {
             from: process.env.SMTP_MAIL,
             to: email,
             subject,
-            html: `<p>PLease click <a href="${confirmLink}">here</a> to confirm your Email.</p>`
+            html: html
         }
         await transporter.sendMail(mailOptions);
     }

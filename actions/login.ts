@@ -39,10 +39,12 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   if (!existingUser.emailVerified) {
     const verificationToken = await generateVerificationToken(existingUser.email);
 
+    const confirmLink = `http://localhost:3000/auth/verification?token=${verificationToken.token}`
+
     await sendEmail({
       email: email,
       subject: "Confirm your Email",
-      token: verificationToken.token,
+      html: `<p>Please click <a href="${confirmLink}">here</a> to confirm your Email.</p>`
     })
 
     return {
@@ -58,7 +60,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     })
   } catch (error) {
     if (error instanceof AuthError) {
-      switch (error.type) {
+      switch (error?.type) {
         case "CredentialsSignin":
           return { error: "Invalid Credentials" };
         default:

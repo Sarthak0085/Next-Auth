@@ -30,10 +30,19 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   //Send Verification Token Email
   const verificationToken = await generateVerificationToken(email);
+
+  if (!verificationToken) {
+    return {
+      error: "Error while generating token"
+    }
+  }
+
+  const confirmLink = `http://localhost:3000/auth/verification?token=${verificationToken.token}`
+
   await sendEmail({
     email: email,
     subject: "Confirm your Email",
-    token: verificationToken.token,
+    html: `<p>Please click <a href="${confirmLink}">here</a> to confirm your Email.</p>`
   });
 
   const user = await db.user.create({
