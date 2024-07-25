@@ -26,3 +26,7 @@ export const NewPasswordSchema = z.object({
     password: z.string()
         .min(8, { message: "Password must contains 8 characters" }),
 });
+
+export const SettingsSchema = z.object({
+    name: z.optional(z.string().min(1, "Name is Required."))
+})
