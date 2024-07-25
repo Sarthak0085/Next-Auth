@@ -7,8 +7,8 @@ export default function ProtectedLayout({
 }) {
   return (
     <div
-      className="h-[100vh] flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] 
-    from-sky-400 to-blue-800"
+      className="h-full w-full py-4 flex flex-col gap-y-10 items-center justify-center 
+      bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800"
     >
       <Navbar />
       {children}

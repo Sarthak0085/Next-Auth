@@ -6,6 +6,8 @@ import { generatePasswordResetToken } from "@/lib/tokens";
 import { ResetSchema } from "@/schemas";
 import * as z from "zod";
 
+const domain = process.env.NEXT_PUBLIC_APP_URL
+
 export const reset = async (values: z.infer<typeof ResetSchema>) => {
   const validatedFields = ResetSchema.safeParse(values);
 
@@ -33,7 +35,7 @@ export const reset = async (values: z.infer<typeof ResetSchema>) => {
     };
   }
 
-  const confirmLink = `http://localhost:3000/auth/new-password?token=${passwordResetToken.token}`;
+  const confirmLink = `${domain}/auth/new-password?token=${passwordResetToken.token}`;
 
   await sendEmail({
     email: email,

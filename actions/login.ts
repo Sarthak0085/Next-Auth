@@ -13,12 +13,15 @@ import { AuthError } from "next-auth";
 import bcrypt from "bcryptjs";
 import * as z from "zod";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
-import { error } from "console";
 import { db } from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 
-export const login = async (values: z.infer<typeof LoginSchema>) => {
-  console.log(values);
+const domain = process.env.NEXT_PUBLIC_APP_URL
+
+export const login = async (
+  values: z.infer<typeof LoginSchema>,
+  callbackUrl?: string | null
+) => {
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -26,8 +29,6 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   }
 
   const { email, password, code } = validatedFields.data;
-
-  console.log(email, password, code);
 
   const existingUser = await getUserByEmail(email);
 
@@ -48,7 +49,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       existingUser.email
     );
 
-    const confirmLink = `http://localhost:3000/auth/verification?token=${verificationToken.token}`;
+    const confirmLink = `${domain}/auth/verification?token=${verificationToken.token}`;
 
     await sendEmail({
       email: email,
@@ -130,7 +131,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
+      redirectTo: callbackUrl ?? DEFAULT_LOGIN_REDIRECT,
     });
   } catch (error) {
     if (error instanceof AuthError) {

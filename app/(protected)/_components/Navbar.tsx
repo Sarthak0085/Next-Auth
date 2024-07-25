@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { UserButton } from "@/components/user-button";
 import Link from "next/link";
@@ -28,10 +30,9 @@ export const Navbar = () => {
           variant={pathname === "/settings" ? "default" : "outline"}
         >
           <Link href={"/settings"}>Settings</Link>
-              </Button>
-              
-              <UserButton />
+        </Button>
       </div>
+      <UserButton />
     </nav>
   );
 };
