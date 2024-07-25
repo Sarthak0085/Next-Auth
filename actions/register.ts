@@ -33,30 +33,30 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   if (!verificationToken) {
     return {
-      error: "Error while generating token"
-    }
+      error: "Error while generating token",
+    };
   }
 
-  const confirmLink = `http://localhost:3000/auth/verification?token=${verificationToken.token}`
+  const confirmLink = `http://localhost:3000/auth/verification?token=${verificationToken.token}`;
 
   await sendEmail({
     email: email,
     subject: "Confirm your Email",
-    html: `<p>Please click <a href="${confirmLink}">here</a> to confirm your Email.</p>`
+    html: `<p>Please click <a href="${confirmLink}">here</a> to confirm your Email.</p>`,
   });
 
   const user = await db.user.create({
     data: {
       name,
       email,
-      password: hashedPassword
-    }
+      password: hashedPassword,
+    },
   });
 
   if (!user) {
     return {
-      error: "Something went wrong!"
-    }
+      error: "Something went wrong!",
+    };
   }
 
   return { success: "Confirmation Email Sent!" };
